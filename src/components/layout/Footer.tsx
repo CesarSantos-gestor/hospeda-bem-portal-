@@ -228,7 +228,7 @@ export function Footer() {
             </div>
             <div className="text-center md:text-center">
               <p>&copy; 2026 Hospeda Bem · Todos os direitos reservados</p>
-              <p className="text-xs mt-1">CNPJ XX.XXX.XXX/0001-XX · capitolio.hospedabem.com</p>
+              <p className="text-xs mt-1">CNPJ XX.XXX.XXX/0001-XX · hospedabem.com</p>
             </div>
             <div className="text-xs text-gray-600">
               <p>Feito com &#10084;&#65039; em Minas Gerais</p>

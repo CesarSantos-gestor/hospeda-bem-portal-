@@ -4,11 +4,13 @@ import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import type { Property } from "@/types";
 
-export function PropertyCard({ p, inCarousel = false, favorites, onToggleFavorite }: {
+export function PropertyCard({ p, inCarousel = false, favorites, onToggleFavorite, cityName, cityState }: {
   p: Property;
   inCarousel?: boolean;
   favorites?: number[];
   onToggleFavorite?: (id: number) => void;
+  cityName?: string;
+  cityState?: string;
 }) {
   const isSaved = favorites?.includes(p.id) || false;
   const [currentImg, setCurrentImg] = useState(0);
@@ -72,7 +74,7 @@ export function PropertyCard({ p, inCarousel = false, favorites, onToggleFavorit
 
         <p className="text-xs text-gray-400 flex items-center gap-1 mb-3">
           <span className="w-3 h-3 flex-shrink-0"><Icon.pin /></span>
-          Capitólio, MG
+          {cityName || "Capitólio"}, {cityState || "MG"}
         </p>
 
         <div className="flex items-center gap-2 mb-3">

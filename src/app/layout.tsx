@@ -2,9 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Hospeda Bem Capitólio | Pousadas e Hotéis com até 30% OFF + Giftback',
-  description: 'Reserve pousadas, hotéis e chalés em Capitólio-MG com descontos de até 30%. Sistema Giftback exclusivo: ganhe até R$ 500 de volta. Avaliações reais, parceiros verificados.',
-  keywords: 'capitólio hospedagem, pousadas capitólio, hotéis capitólio, chalés capitólio, hospeda bem, giftback, furnas, cânions, serra da canastra, minas gerais',
+  title: {
+    default: 'Hospeda Bem | Pousadas, Hotéis e Chalés com Giftback',
+    template: '%s | Hospeda Bem',
+  },
+  description: 'Encontre pousadas, hotéis e chalés nas melhores cidades turísticas do Brasil. Descontos de até 30% + Giftback exclusivo. Avaliações reais, parceiros verificados.',
+  keywords: 'hospedagem brasil, pousadas, hotéis, chalés, hospeda bem, giftback, turismo brasil',
 
   authors: [{ name: 'Hospeda Bem' }],
   creator: 'Hospeda Bem',
@@ -17,9 +20,9 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'Hospeda Bem Capitólio | Pousadas, Hotéis e Chalés',
-    description: 'Encontre as melhores hospedagens em Capitólio-MG. Descontos de até 30% + Giftback. Passeios, restaurantes e atrativos turísticos.',
-    url: 'https://capitolio.hospedabem.com',
+    title: 'Hospeda Bem | Pousadas, Hotéis e Chalés com Giftback',
+    description: 'Encontre as melhores hospedagens nas cidades turísticas do Brasil. Descontos de até 30% + Giftback exclusivo.',
+    url: 'https://hospedabem.com',
     siteName: 'Hospeda Bem',
     locale: 'pt_BR',
     type: 'website',
@@ -28,15 +31,15 @@ export const metadata: Metadata = {
         url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=630&fit=crop',
         width: 1200,
         height: 630,
-        alt: 'Cânions de Furnas em Capitólio, Minas Gerais - Vista aérea do lago',
+        alt: 'Hospeda Bem - Hospedagens nas melhores cidades turísticas do Brasil',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Hospeda Bem Capitólio | Pousadas e Hotéis com Giftback',
-    description: 'Reserve com até 30% OFF + Giftback exclusivo. As melhores hospedagens em Capitólio-MG.',
+    title: 'Hospeda Bem | Pousadas e Hotéis com Giftback',
+    description: 'Reserve com até 30% OFF + Giftback exclusivo. As melhores hospedagens do Brasil.',
     images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=630&fit=crop'],
     creator: '@hospedabem',
   },
@@ -64,9 +67,9 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 
   alternates: {
-    canonical: 'https://capitolio.hospedabem.com',
+    canonical: 'https://hospedabem.com',
     languages: {
-      'pt-BR': 'https://capitolio.hospedabem.com',
+      'pt-BR': 'https://hospedabem.com',
     },
   },
 
@@ -93,6 +96,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
@@ -104,33 +110,20 @@ export default function RootLayout({
               '@type': 'TravelAgency',
               name: 'Hospeda Bem',
               description: 'Marketplace de hospedagens em cidades turísticas do Brasil',
-              url: 'https://capitolio.hospedabem.com',
-              logo: 'https://capitolio.hospedabem.com/logo.png',
+              url: 'https://hospedabem.com',
+              logo: 'https://hospedabem.com/logo.svg',
               image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=630',
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Capitólio',
-                addressRegion: 'MG',
-                addressCountry: 'BR',
-              },
               sameAs: [
                 'https://www.instagram.com/hospedabem',
                 'https://www.facebook.com/hospedabem',
                 'https://www.youtube.com/@hospedabem',
               ],
               priceRange: 'R$ 195 - R$ 680',
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '9.2',
-                reviewCount: '847',
-                bestRating: '10',
-                worstRating: '1',
-              },
             }),
           }}
         />
       </head>
-      <body className="antialiased bg-white text-gray-900">
+      <body className="antialiased bg-white text-gray-900" style={{ fontFamily: "'Inter', sans-serif" }}>
         {children}
       </body>
     </html>

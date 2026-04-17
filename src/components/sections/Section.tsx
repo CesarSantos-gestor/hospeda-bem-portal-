@@ -1,30 +1,23 @@
 import { PropertyCard } from "@/components/cards/PropertyCard";
 import type { Property } from "@/types";
 
-export function Section({ title, subtitle, items, filtered, favorites, onToggleFavorite }: {
+export function Section({ title, subtitle, items, filtered, favorites, onToggleFavorite, cityName, cityState }: {
   title: string; subtitle: string; icon: string;
   items: Property[]; filtered: string;
   favorites?: number[];
   onToggleFavorite?: (id: number) => void;
+  cityName?: string;
+  cityState?: string;
 }) {
   const shown = filtered === "Todos" ? items : items.filter(p => p.type === filtered);
   if (shown.length === 0) return null;
   return (
-    <div>
+    <section>
       <div className="flex items-end justify-between mb-6">
         <div>
           <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-1">{title}</h2>
           <p className="text-sm text-gray-500">{subtitle}</p>
         </div>
-        <a
-          href="#ver-todos"
-          className="text-sm md:text-base font-semibold transition-all hover:underline min-h-[44px] flex items-center gap-1"
-          style={{ color: "#003580" }}>
-          Ver todos
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
       </div>
       <div className="relative -mx-4 md:mx-0">
         <div
@@ -38,12 +31,12 @@ export function Section({ title, subtitle, items, filtered, favorites, onToggleF
               <div
                 key={p.id}
                 className="flex-shrink-0 snap-start w-[85%] sm:w-[45%] md:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] xl:w-[calc(25%-15px)]">
-                <PropertyCard p={p} favorites={favorites} onToggleFavorite={onToggleFavorite} />
+                <PropertyCard p={p} favorites={favorites} onToggleFavorite={onToggleFavorite} cityName={cityName} cityState={cityState} />
               </div>
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

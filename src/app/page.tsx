@@ -27,9 +27,7 @@ export default function HomePage() {
   const allCities = cities ?? CITIES_FALLBACK;
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');*{font-family:'Inter',sans-serif}`}</style>
-
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
 
       {/* HERO */}
