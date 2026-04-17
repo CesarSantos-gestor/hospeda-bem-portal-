@@ -117,7 +117,7 @@ function FooterLinkList({ links }: { links: { label: string; href: string; highl
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white mt-16">
+    <footer className="bg-gray-900 text-white mt-8 md:mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-12 text-center">
           <div className="flex justify-center mb-3">

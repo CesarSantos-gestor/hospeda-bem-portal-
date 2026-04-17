@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 // ─── DATA & CONSTANTS ─────────────────────────────────────────────────────────
@@ -72,6 +72,15 @@ function applyFilters(
   return filtered;
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function sortProperties(props: Property[], sortBy: SortBy): Property[] {
   const sorted = [...props];
   switch (sortBy) {
@@ -116,6 +125,9 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
     sortBy,
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const shuffledProperties = useMemo(() => shuffle(filteredAndSortedProperties), [filteredAndSortedProperties.length, activeFilter, sortBy, priceRange, selectedAmenities.length, onlySuperhost, onlyVerified]);
+
   const propertyCount = properties?.length ?? 0;
 
   function handleCityChange(newSlug: string) {
@@ -140,7 +152,7 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
       <Navbar />
 
       {/* ── BREADCRUMBS ─── */}
-      <nav aria-label="Breadcrumb" className="bg-gray-50 border-b border-gray-200">
+      <nav aria-label="Breadcrumb" className="hidden md:block bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <ol className="flex items-center gap-2 text-sm" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="flex items-center gap-2">
@@ -183,11 +195,11 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
           <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full" style={{ backgroundColor: C.lightBlue, filter: "blur(60px)" }} />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-0">
-          <h1 className="text-3xl md:text-4xl font-black text-white mb-1">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-0">
+          <h1 className="text-2xl md:text-4xl font-black text-white mb-1">
             Hospedagens em <span style={{ color: C.yellow }}>{cityName}</span>
           </h1>
-          <p className="text-blue-200 text-sm mb-6">
+          <p className="text-blue-100 text-sm mb-6">
             {propertyCount > 0 ? `${propertyCount} opções disponíveis` : "Carregando opções"} · {cityHighlights} · Reserve direto e ganhe Giftback
           </p>
 
@@ -248,7 +260,8 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
 
           {/* Tags de comodidades */}
           <div className="py-5">
-            <div className="md:hidden -mx-4 px-4 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div className="md:hidden -mx-4 px-4 overflow-x-auto pb-2 relative" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-12 z-10 bg-gradient-to-l from-[#003580]/80 to-transparent md:hidden" />
               <div className="flex gap-2">
                 {TAGS.map(tag => (
                   <button
@@ -290,12 +303,13 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
 
       {/* ── CONTEÚDO PRINCIPAL ─── */}
       <main id="main-content">
-        <div id="resultados" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-14">
+        <div id="resultados" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 md:space-y-14">
           {/* Filtros */}
           <div className="space-y-3">
-            {/* Mobile chips */}
-            <div className="md:hidden">
-              <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {/* Mobile chips + sort/filters - sticky */}
+            <div className="md:hidden sticky top-[104px] z-30 bg-gray-50 -mx-4 px-4 py-2 space-y-2">
+              <div className="flex gap-2 overflow-x-auto pb-1 relative" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="pointer-events-none absolute right-0 top-0 bottom-1 w-10 z-10 bg-gradient-to-l from-gray-50 to-transparent" />
                 {FILTERS.map(f => (
                   <button
                     key={f}
@@ -308,10 +322,8 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
                   </button>
                 ))}
               </div>
-            </div>
 
-            {/* Mobile sort + filters */}
-            <div className="md:hidden flex items-center gap-2 -mx-4 px-4">
+              <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-2 bg-white border-2 rounded-xl px-4 py-2.5 text-sm font-bold hover:border-gray-400 relative shadow-sm flex-1"
@@ -332,6 +344,7 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
                 <option value="price_asc">Menor preço</option>
                 <option value="price_desc">Maior preço</option>
               </select>
+              </div>
             </div>
 
             {/* Desktop filters */}
@@ -386,38 +399,12 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
             resultCount={filteredAndSortedProperties.length}
           />
 
-          {/* ── SEÇÃO 1: Ofertas Incríveis ── */}
+          {/* ── OFERTAS INCRÍVEIS (todas as propriedades em ordem aleatória) ── */}
           <Section
             title="Ofertas incríveis"
             subtitle={`Os melhores preços disponíveis agora em ${cityName}`}
             icon=""
-            items={filteredAndSortedProperties.filter(p => p.oldPrice).slice(0, 4)}
-            filtered={activeFilter}
-            favorites={favorites}
-            onToggleFavorite={toggleFavorite}
-            cityName={cityName}
-            cityState={cityState}
-          />
-
-          {/* ── SEÇÃO 2: Recomendadas ── */}
-          <Section
-            title="Estadias recomendadas para você"
-            subtitle="Escolhas baseadas nas avaliações mais altas"
-            icon=""
-            items={filteredAndSortedProperties.filter(p => p.score >= 9.0).slice(0, 4)}
-            filtered={activeFilter}
-            favorites={favorites}
-            onToggleFavorite={toggleFavorite}
-            cityName={cityName}
-            cityState={cityState}
-          />
-
-          {/* ── SEÇÃO 3: Todas as hospedagens ── */}
-          <Section
-            title={`Todas as hospedagens em ${cityName}`}
-            subtitle={`${filteredAndSortedProperties.length} resultados encontrados`}
-            icon=""
-            items={filteredAndSortedProperties.slice(0, 8)}
+            items={shuffledProperties}
             filtered={activeFilter}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
@@ -434,35 +421,73 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
                   <p className="text-sm text-gray-500">O que não pode faltar na sua visita a {cityName}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                {(atrativosTuristicos ?? []).map(atrativo => (
-                  <AtrativoCard key={atrativo.id} atrativo={atrativo} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
-                ))}
+              <div className="relative -mx-4 md:mx-0">
+                <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-12 z-10 bg-gradient-to-l from-gray-50 to-transparent md:hidden" />
+                <div className="overflow-x-auto pb-4 px-4 md:px-0 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  <div className="flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5">
+                    {(atrativosTuristicos ?? []).map(atrativo => (
+                      <div key={atrativo.id} className="flex-shrink-0 snap-start w-[85%] sm:w-[45%] md:w-auto">
+                        <AtrativoCard atrativo={atrativo} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </section>
           )}
 
-          {/* ── ONDE COMER ── */}
+          {/* ── RESTAURANTES ── */}
           {(restaurantes ?? []).length > 0 && (
             <section>
               <div className="flex items-end justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-1">Onde Comer</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-1">Restaurantes</h2>
                   <p className="text-sm text-gray-500">Os melhores restaurantes e bares de {cityName}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                {(restaurantes ?? []).map(restaurante => (
-                  <RestauranteCard key={restaurante.id} restaurante={restaurante} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
-                ))}
+              <div className="relative -mx-4 md:mx-0">
+                <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-12 z-10 bg-gradient-to-l from-gray-50 to-transparent md:hidden" />
+                <div className="overflow-x-auto pb-4 px-4 md:px-0 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  <div className="flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5">
+                    {(restaurantes ?? []).map(restaurante => (
+                      <div key={restaurante.id} className="flex-shrink-0 snap-start w-[85%] sm:w-[45%] md:w-auto">
+                        <RestauranteCard restaurante={restaurante} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </section>
           )}
         </div>
 
+        {/* ── ATRATIVOS ─── */}
+        {(passeiosParceiros ?? []).length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-1">Atrativos</h2>
+                <p className="text-sm text-gray-500">Descubra o melhor de {cityName}</p>
+              </div>
+            </div>
+            <div className="relative -mx-4 md:mx-0">
+              <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-12 z-10 bg-gradient-to-l from-gray-50 to-transparent md:hidden" />
+              <div className="overflow-x-auto pb-4 px-4 md:px-0 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5">
+                  {(passeiosParceiros ?? []).map(parceiro => (
+                    <div key={parceiro.id} className="flex-shrink-0 snap-start w-[85%] sm:w-[45%] md:w-auto">
+                      <ParceiroCard parceiro={parceiro} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── BANNER GIFTBACK ─── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="rounded-3xl p-8 md:p-12 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${C.dark}, ${C.navy}, ${C.blue})` }}>
+          <div className="rounded-3xl p-5 md:p-8 lg:p-12 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${C.dark}, ${C.navy}, ${C.blue})` }}>
             <div className="absolute right-0 top-0 w-64 h-64 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle, ${C.yellow}, transparent)`, filter: "blur(30px)" }} />
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-white flex-1">
@@ -475,28 +500,11 @@ export function CityPageClient({ citySlug, cityName, cityState, cityHighlights }
               </div>
               <div className="flex flex-col gap-3 flex-shrink-0">
                 <button className="font-black px-8 py-3.5 rounded-xl text-sm hover:opacity-90 transition-all" style={{ backgroundColor: C.yellow, color: C.navy }}>Como funciona &rarr;</button>
-                <button className="font-semibold px-8 py-3 rounded-xl border border-white/30 text-white text-sm hover:bg-white/10 transition-all">Ver com maior Giftback</button>
+                <button className="font-semibold px-8 py-3 rounded-xl border border-white/50 text-white text-sm hover:bg-white/10 transition-all">Ver com maior Giftback</button>
               </div>
             </div>
           </div>
         </section>
-
-        {/* ── PARCEIROS DE PASSEIOS ─── */}
-        {(passeiosParceiros ?? []).length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-1">Passeios e Aventuras</h2>
-                <p className="text-sm text-gray-500">Parceiros oficiais para tornar sua estadia inesquecível</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {(passeiosParceiros ?? []).map(parceiro => (
-                <ParceiroCard key={parceiro.id} parceiro={parceiro} favorites={favorites} toggleFavorite={toggleFavorite} isFavorite={isFavorite} />
-              ))}
-            </div>
-          </section>
-        )}
       </main>
 
       {/* ── FOOTER ─── */}

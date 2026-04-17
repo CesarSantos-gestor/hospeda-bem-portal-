@@ -20,6 +20,7 @@ export function Section({ title, subtitle, items, filtered, favorites, onToggleF
         </div>
       </div>
       <div className="relative -mx-4 md:mx-0">
+        <div className="pointer-events-none absolute right-0 top-0 bottom-4 w-12 z-10 bg-gradient-to-l from-gray-50 to-transparent md:hidden" />
         <div
           className="overflow-x-auto overflow-y-visible pb-4 px-4 md:px-0 snap-x snap-mandatory scrollbar-hide"
           style={{

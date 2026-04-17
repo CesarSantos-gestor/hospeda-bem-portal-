@@ -1,6 +1,8 @@
+"use client";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { Portal as C } from "@/constants/colors";
+import { useUIStore } from "@/stores";
 
 const NAV_ITEMS = [
   { icon: <Icon.bed />, label: "Hospedagens", active: true },
@@ -10,6 +12,7 @@ const NAV_ITEMS = [
 ];
 
 export function Navbar() {
+  const { setShowMobileMenu } = useUIStore();
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +36,7 @@ export function Navbar() {
               <div className="w-4 h-4"><Icon.megaphone /></div>
               Anuncie seu Hotel
             </button>
-            <button className="flex items-center gap-2 border border-gray-200 rounded-full px-3 py-2 hover:shadow-md transition-shadow cursor-pointer">
+            <button onClick={() => setShowMobileMenu(true)} className="flex items-center gap-2 border border-gray-200 rounded-full px-3 py-2 hover:shadow-md transition-shadow cursor-pointer">
               <div className="w-4 h-4 text-gray-600"><Icon.menu /></div>
               <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: C.navy }}>
                 <div className="w-4 h-4 text-white"><Icon.user /></div>

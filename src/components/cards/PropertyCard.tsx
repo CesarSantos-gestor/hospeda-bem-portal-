@@ -20,7 +20,7 @@ export function PropertyCard({ p, inCarousel = false, favorites, onToggleFavorit
     <div className={`bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer border border-gray-100 ${inCarousel ? "w-[280px] flex-shrink-0" : ""}`}>
 
       {/* IMAGEM COM CARROSSEL */}
-      <div className="relative overflow-hidden h-48">
+      <div className="relative overflow-hidden h-52 sm:h-48">
         <Image
           src={p.images ? p.images[currentImg] : p.image || ""}
           alt={p.name}
@@ -45,6 +45,16 @@ export function PropertyCard({ p, inCarousel = false, favorites, onToggleFavorit
             <button onClick={(e) => { e.stopPropagation(); setCurrentImg((currentImg + 1) % p.images.length); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/70 transition-all shadow-lg">
               <div className="w-5 h-5 text-gray-800 font-black">{Icon.chevronRight()}</div>
             </button>
+            {/* Dots */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {p.images.slice(0, 5).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setCurrentImg(i); }}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${currentImg === i ? "bg-white w-3" : "bg-white/60"}`}
+                />
+              ))}
+            </div>
           </>
         )}
       </div>
