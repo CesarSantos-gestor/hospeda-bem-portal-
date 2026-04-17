@@ -2,11 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Mapa de domínios custom → slug da cidade
 const DOMAIN_CITY_MAP: Record<string, string> = {
-  "hospedacapitolio.com": "capitolio",
-  "www.hospedacapitolio.com": "capitolio",
+  "hospedabemcapitolio.com": "capitolio",
+  "www.hospedabemcapitolio.com": "capitolio",
+  "hospedabemgramado.com": "gramado",
+  "www.hospedabemgramado.com": "gramado",
+  "hospedabembonito.com": "bonito",
+  "www.hospedabembonito.com": "bonito",
   // Adicionar futuras cidades aqui:
-  // "hospedagramado.com": "gramado",
-  // "hospedabonito.com": "bonito",
+  // "hospedabemtiradentes.com": "tiradentes",
 };
 
 export function middleware(request: NextRequest) {
