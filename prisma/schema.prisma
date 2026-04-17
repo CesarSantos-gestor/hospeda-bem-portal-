@@ -6,6 +6,16 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id           Int     @id @default(autoincrement())
+  name         String
+  email        String  @unique
+  passwordHash String
+  role         String  @default("USER") // SUPER_ADMIN, ADMIN, USER
+  active       Boolean @default(true)
+  tenantId     Int?
+}
+
 model City {
   id    String @id
   name  String
@@ -42,6 +52,7 @@ model Property {
 
   tenantId       Int?
 
+  source         String  @default("pms")
   portalApproved Boolean @default(false)
   portalActive   Boolean @default(false)
   portalFeatured Boolean @default(false)
