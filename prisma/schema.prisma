@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model City {
+  id    String @id
+  name  String
+  state String
+  count Int
+}
+
+model Property {
+  id         Int     @id @default(autoincrement())
+  name       String
+  type       String
+  score      Float
+  scoreLabel String
+  reviews    Int
+  price      Int
+  oldPrice   Int?
+  images     String  // JSON array
+  amenities  String  // JSON array
+  giftback   Int
+  superhost  Boolean
+  verified   Boolean
+
+  slug            String?
+  description     String?
+  city            String?
+  state           String?
+  country         String?
+  amenitiesDetail String? // JSON
+  location        String? // JSON
+  ratings         String? // JSON
+  policies        String? // JSON
+  contact         String? // JSON
+  bookingSubdomain String? @unique
+
+  tenantId       Int?
+
+  portalApproved Boolean @default(false)
+  portalActive   Boolean @default(false)
+  portalFeatured Boolean @default(false)
+
+  blockedDates    BlockedDate[]
+  rooms           Room[]
+  reviewsData     Review[]
+
+  @@index([tenantId])
+}
+
+model Room {
+  id          Int     @id @default(autoincrement())
+  name        String
+  capacity    Int
+  beds        String
+  size        String
+  price       Int
+  featured    Boolean
+  rating      Float
+  ratingLabel String
+  amenities   String  // JSON array
+  images      String  // JSON array
+  policies    String  // JSON array
+  breakfast   Boolean
+  roomCount   Int
+  installments Boolean
+  giftPoints  Boolean
+  lakeView    Boolean
+  bathtub     Boolean
+  cleaningFee    Float  @default(0)
+  turnoverDays   Int    @default(0)
+
+  rateTotal         Int?
+  occupancyIncluded Int?
+  extraAdultRate    Int?
+  extraChildRate    Int?
+
+  property     Property @relation(fields: [propertyId], references: [id])
+  propertyId   Int
+  ratePlanId   Int?
+
+  @@index([propertyId])
+}
+
+model Review {
+  id       Int    @id @default(autoincrement())
+  author   String
+  date     String
+  rating   Int
+  comment  String
+
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
+
+  @@index([propertyId])
+}
+
+model BlockedDate {
+  id         Int      @id @default(autoincrement())
+  date       DateTime
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
+
+  @@index([propertyId])
+}
+
+model Restaurant {
+  id              Int    @id @default(autoincrement())
+  nome            String
+  especialidade   String
+  descricao       String
+  faixaPreco      String
+  avaliacao       Float
+  totalAvaliacoes Int
+  imagem          String
+  tags            String // JSON array
+  horario         String
+  localizacao     String
+  googlePlaceId   String
+  googleMapsUrl   String
+}
+
+model Attraction {
+  id              Int     @id @default(autoincrement())
+  nome            String
+  descricao       String
+  preco           Float
+  desconto        Float
+  avaliacao       Float
+  totalAvaliacoes Int
+  imagem          String
+  localizacao     String
+  googleMapsUrl   String
+  ingressoUrl     String?
+  gratuito        Boolean
+}
+
+model Tour {
+  id              Int     @id @default(autoincrement())
+  nome            String
+  tipo            String
+  descricao       String
+  duracao         String
+  preco           String
+  avaliacao       Float
+  totalAvaliacoes Int
+  whatsapp        String
+  telefone        String
+  instagram       String
+  imagem          String
+  destaque        Boolean
+}
